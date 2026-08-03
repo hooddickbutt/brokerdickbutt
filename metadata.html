@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Broker — Metadata · Broker Dickbutt</title>
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .detail{ padding:28px 0 60px; }
+  .back-link{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12.5px; color:var(--text-dim); margin-bottom:22px; }
+  .back-link:hover{ color:var(--accent); }
+  .detail-media{
+    width:100%; aspect-ratio:1/1; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border);
+    background:#0a0a0a; box-shadow:0 0 50px rgba(212,255,0,0.12); position:relative; margin-bottom:26px;
+  }
+  .detail-media img{ width:100%; height:100%; object-fit:cover; image-rendering:pixelated; opacity:0; transition:opacity .5s ease; }
+  .detail-media img.show{ opacity:1; }
+  .detail-tag{ font-family:var(--mono); font-size:11.5px; color:var(--accent); letter-spacing:1.5px; margin-bottom:10px; }
+  .detail-name{ font-size:24px; margin-bottom:16px; }
+  .detail-desc{ color:var(--text-dim); font-size:14.5px; line-height:1.75; margin-bottom:30px; }
+  .attrs-title{ font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin-bottom:14px; }
+  .attrs-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:34px; }
+  @media (min-width:640px){ .attrs-grid{ grid-template-columns:repeat(3,1fr);} }
+  .attr-chip{ border:1px solid var(--border); padding:12px 14px; background:var(--card); border-radius:var(--radius-sm); }
+  .attr-chip .t{ font-family:var(--mono); font-size:9px; color:var(--text-faint); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+  .attr-chip .v{ font-family:var(--sans); font-size:13.5px; color:var(--text); font-weight:600; }
+  .detail-actions{ display:flex; flex-direction:column; gap:12px; }
+  @media (min-width:520px){ .detail-actions{ flex-direction:row; } }
+  .state-msg{ text-align:center; padding:80px 20px; color:var(--text-dim); font-family:var(--mono); font-size:13px; }
+  .id-nav{ display:flex; justify-content:space-between; gap:10px; margin-top:24px; }
+  .id-nav .btn{ flex:1; }
+</style>
+</head>
+<body class="page-enter">
+<div class="scanlines"></div>
+
+<header class="site">
+  <nav>
+    <div class="brand">
+      <div class="brand-mark"><img id="logoImg" alt="Broker Dickbutt rotating logo"></div>
+      <div class="brand-name">Broker Dickbutt</div>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#collection">Collection</a>
+      <a href="broker.html">Broker</a>
+      <a href="https://opensea.io/collection/Brokerdickbutt" target="_blank" rel="noopener">OpenSea</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="index.html">← Back</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap detail">
+  <a class="back-link" href="javascript:history.length>1?history.back():location.href='index.html'">← Back to collection</a>
+  <div id="metadataContent">
+    <div class="state-msg">Loading Broker metadata…</div>
+  </div>
+</main>
+
+<div class="tab-spacer"></div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="brand">
+        <div class="brand-mark"><img id="footerLogoImg" alt="Broker Dickbutt logo"></div>
+        <div class="brand-name">Broker Dickbutt</div>
+      </div>
+      <div class="foot-links">
+        <a href="https://opensea.io/collection/Brokerdickbutt" target="_blank" rel="noopener">OpenSea</a>
+        <a href="broker.html">Broker</a>
+        <a href="https://x.com/0xdevlab" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
+    <div class="foot-copy">© 2026 BROKER DICKBUTT · 10,000 PIXEL BROKERS ON ROBINHOOD CHAIN · METADATA STORED ON IPFS</div>
+  </div>
+</footer>
+
+<nav class="tabbar">
+  <a href="index.html"><span class="ico">⌂</span>Home</a>
+  <a href="index.html#collection"><span class="ico">▦</span>Collection</a>
+  <a href="broker.html"><span class="ico">◆</span>Broker</a>
+  <a href="https://opensea.io/collection/Brokerdickbutt" target="_blank" rel="noopener"><span class="ico">↗</span>OpenSea</a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+<script src="metadata.js"></script>
+</body>
+</html>
