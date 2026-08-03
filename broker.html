@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Broker Dashboard — Broker Dickbutt</title>
+<meta name="description" content="Stake your Broker Dickbutt NFTs, track holdings, and prepare for the Broker ecosystem.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .broker-bg{
+    position:fixed; inset:0; z-index:-1; overflow:hidden;
+  }
+  .broker-bg span{
+    position:absolute; border-radius:50%;
+    background:radial-gradient(circle, rgba(212,255,0,0.16), transparent 70%);
+    filter:blur(20px); animation:drift 14s ease-in-out infinite;
+  }
+  .broker-bg span:nth-child(1){ width:280px; height:280px; top:-60px; left:-60px; animation-delay:0s; }
+  .broker-bg span:nth-child(2){ width:220px; height:220px; bottom:10%; right:-40px; animation-delay:3s; }
+  .broker-bg span:nth-child(3){ width:180px; height:180px; top:40%; left:60%; animation-delay:6s; }
+  @keyframes drift{ 0%,100%{ transform:translate(0,0);} 50%{ transform:translate(20px,-24px);} }
+
+  .broker-hero{ padding:36px 0 20px; text-align:center; }
+  .broker-hero h1{ font-size:clamp(22px,6vw,32px); margin-bottom:10px; }
+  .mini-countdown-row{ display:flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-top:6px; }
+  .mini-countdown-row b{ color:var(--accent); }
+
+  .wallet-card{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:16px 18px; border-radius:var(--radius); margin:22px 0; border:1px solid var(--border); background:var(--card);
+  }
+  .wallet-card .addr{ font-family:var(--mono); font-size:12.5px; color:var(--text-dim); }
+  .wallet-dot{ width:8px; height:8px; border-radius:50%; background:var(--text-faint); display:inline-block; margin-right:8px; }
+  .wallet-dot.on{ background:var(--accent); box-shadow:0 0 8px var(--glow); }
+
+  .toolbar{ display:flex; flex-direction:column; gap:14px; padding:8px 0 24px; }
+  .search-box{ position:relative; width:100%; }
+  .search-box input{
+    width:100%; background:var(--card); border:1px solid var(--border); color:var(--text);
+    padding:14px 16px 14px 42px; font-family:var(--mono); font-size:13.5px; border-radius:var(--radius-sm);
+  }
+  .search-box input:focus{ outline:none; border-color:var(--border-lit); }
+  .search-box .icon{ position:absolute; left:15px; top:50%; transform:translateY(-50%); color:var(--text-dim); font-size:14px; }
+  .filters{ display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; }
+  .filters::-webkit-scrollbar{ display:none; }
+  .filter-chip{
+    flex:0 0 auto; padding:10px 18px; border:1px solid var(--border); background:transparent; color:var(--text-dim);
+    font-family:var(--mono); font-size:11px; letter-spacing:0.5px; border-radius:999px; text-transform:uppercase;
+    transition:all .2s;
+  }
+  .filter-chip.active{ background:var(--accent); color:#000; border-color:var(--accent); }
+  .filter-chip:not(.active):active{ border-color:var(--border-lit); }
+
+  .empty-state{ text-align:center; padding:70px 20px; color:var(--text-dim); font-family:var(--mono); font-size:13px; grid-column:1/-1; }
+
+  .staking-section{ border-top:1px solid var(--border); }
+  .reward-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  @media (min-width:640px){ .reward-grid{ grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:960px){ .reward-grid{ grid-template-columns:repeat(5,1fr);} }
+  .reward-card{
+    padding:22px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card);
+    text-align:center; position:relative; overflow:hidden; transition:transform .2s, border-color .2s;
+  }
+  .reward-card:hover{ transform:translateY(-4px); border-color:var(--border-lit); }
+  .reward-card::after{
+    content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 0%, rgba(212,255,0,0.12), transparent 70%);
+    opacity:0; transition:opacity .3s;
+  }
+  .reward-card:hover::after{ opacity:1; }
+  .reward-card .sym{ font-family:var(--pixel); font-size:15px; color:var(--accent); margin-bottom:10px; }
+  .reward-card .soon{ font-family:var(--mono); font-size:9.5px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase; border:1px solid var(--border); padding:4px 9px; border-radius:999px; display:inline-block; }
+</style>
+</head>
+<body class="page-enter">
+<div class="scanlines"></div>
+<div class="broker-bg"><span></span><span></span><span></span></div>
+
+<header class="site">
+  <nav>
+    <div class="brand">
+      <div class="brand-mark"><img id="logoImg" alt="Broker Dickbutt rotating logo"></div>
+      <div class="brand-name">Broker Dickbutt</div>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#collection">Collection</a>
+      <a href="https://x.com/0xdevlab" target="_blank" rel="noopener">X</a>
+      <a href="https://opensea.io/collection/Brokerdickbutt" target="_blank" rel="noopener">OpenSea</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost hide-mobile" href="index.html">← Home</a>
+      <button class="btn btn-primary" id="walletBtn"><span id="walletLabel">Connect Wallet</span></button>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="broker-hero">
+    <div class="eyebrow" style="justify-content:center;">/BROKER · STAKING DASHBOARD</div>
+    <h1>Ready To <span style="color:var(--accent); text-shadow:0 0 20px var(--glow);">Broker?</span></h1>
+    <div class="mini-countdown-row">Ecosystem unlock in <b id="miniCd">48:00:00</b></div>
+  </section>
+
+  <div class="countdown" id="brokerCountdown">
+    <div class="cd-box"><div class="n" id="cd-d">00</div><div class="l">Days</div></div>
+    <div class="cd-box"><div class="n" id="cd-h">00</div><div class="l">Hours</div></div>
+    <div class="cd-box"><div class="n" id="cd-m">00</div><div class="l">Minutes</div></div>
+    <div class="cd-box"><div class="n" id="cd-s">00</div><div class="l">Seconds</div></div>
+  </div>
+
+  <div class="wallet-card">
+    <div><span class="wallet-dot" id="walletDot"></span><span class="addr" id="walletAddrText">No wallet connected</span></div>
+    <button class="btn btn-ghost btn-sm" id="walletBtn2">Connect</button>
+  </div>
+
+  <section style="padding-top:8px;">
+    <div class="toolbar">
+      <div class="search-box">
+        <span class="icon">⌕</span>
+        <input type="text" id="brokerSearch" placeholder="Search by token ID…">
+      </div>
+      <div class="filters" id="brokerFilters">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="holding">Holding</button>
+        <button class="filter-chip" data-filter="staked">Staked</button>
+        <button class="filter-chip" data-filter="listed">Listed</button>
+      </div>
+    </div>
+    <div class="grid" id="brokerGrid"></div>
+  </section>
+
+  <section class="staking-section">
+    <div class="section-head">
+      <div class="eyebrow">Future Utility</div>
+      <h2>Staking Rewards</h2>
+      <p>Stake your Brokers once the ecosystem unlocks to start earning across these reward tracks.</p>
+    </div>
+    <div class="reward-grid">
+      <div class="reward-card"><div class="sym">$DICKBUTT</div><div class="soon">Coming Soon</div></div>
+      <div class="reward-card"><div class="sym">$NVIDIA</div><div class="soon">Coming Soon</div></div>
+      <div class="reward-card"><div class="sym">$AMZN</div><div class="soon">Coming Soon</div></div>
+      <div class="reward-card"><div class="sym">$AAPL</div><div class="soon">Coming Soon</div></div>
+      <div class="reward-card"><div class="sym">$TSLA</div><div class="soon">Coming Soon</div></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="tab-spacer"></div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="brand">
+        <div class="brand-mark"><img id="footerLogoImg" alt="Broker Dickbutt logo"></div>
+        <div class="brand-name">Broker Dickbutt</div>
+      </div>
+      <div class="foot-links">
+        <a href="https://opensea.io/collection/Brokerdickbutt" target="_blank" rel="noopener">OpenSea</a>
+        <a href="index.html">Home</a>
+        <a href="https://x.com/0xdevlab" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
+    <div class="foot-copy">© 2026 BROKER DICKBUTT · 10,000 PIXEL BROKERS ON ROBINHOOD CHAIN · METADATA STORED ON IPFS</div>
+  </div>
+</footer>
+
+<nav class="tabbar">
+  <a href="index.html"><span class="ico">⌂</span>Home</a>
+  <a href="index.html#collection"><span class="ico">▦</span>Collection</a>
+  <a href="broker.html" class="active"><span class="ico">◆</span>Broker</a>
+  <a href="https://opensea.io/collection/Brokerdickbutt" target="_blank" rel="noopener"><span class="ico">↗</span>OpenSea</a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+<script src="broker.js"></script>
+</body>
+</html>
